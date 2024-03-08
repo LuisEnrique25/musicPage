@@ -1,13 +1,17 @@
 import { createSlice }  from "@reduxjs/toolkit";
 import { axiosMusic } from "../../utils/configAxios";
 
+const initialState= {
+    email: "",
+    name: "",
+    token: ""
+}
+
+
 const userSlice = createSlice({
     name: "user",
-    initialState: {
-        email: "",
-        name: "",
-        token: ""
-    },
+    //si existe algo en el localStorage toma eso para entrar o no al login
+    initialState: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : initialState ,
     reducers:{
         setLoginData: (state, action) => {
             const loginData = action.payload; // -> {name:"", email:"", token:""}
@@ -17,7 +21,11 @@ const userSlice = createSlice({
             //state.token = loginData.token;
             
             //forma 2 para sobre escribir los valore del estado 
-            return {...state, ...loginData }
+            const newState =  {...state, ...loginData };
+            //guardar info en localStorage para persistencia
+            localStorage.setItem("user", JSON.stringify(newState))
+
+            return newState;
         }
     },
 });
