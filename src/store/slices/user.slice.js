@@ -26,10 +26,13 @@ const { setLoginData } = userSlice.actions
 
 export default userSlice.reducer;
 
-export const login = (data) =>  (dispatch) => {
+export const login = (data, navigate) =>  (dispatch) => {
         //configuracion de axios en utils
         axiosMusic.post(`/api/auth/login`, data)  
-        .then(({ data }) => dispatch(setLoginData(data)))
+        .then(({ data }) => {
+            dispatch(setLoginData(data))
+            navigate("/")
+        })
         .catch((err) => console.log(err))
 
 }

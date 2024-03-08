@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ContainerAuth from '../components/layaouts/ContainerAuth'
 import { login } from '../store/slices/user.slice'
 
@@ -8,13 +8,14 @@ import { login } from '../store/slices/user.slice'
 const Login = () => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const hasndleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
 
-    dispatch(login(data))    
+    dispatch(login(data, navigate))    
   }
   return (
     <ContainerAuth>
