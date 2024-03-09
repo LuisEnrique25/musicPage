@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/shared/Header'
 import { axiosMusic } from '../utils/configAxios'
 
 
 
 const Home = () => {
+
+  const [tracksRecommendations, setTracksRecommendations] = useState([])
+
   useEffect(() => {
     const authToken = {
       headers:{
@@ -14,7 +17,7 @@ const Home = () => {
 
     axiosMusic.get("/api/tracks/recommendations?seed_genres=rock,pop,anime", authToken
       )
-      .then(({data}) => console.log(data))
+      .then(({data}) =>setTracksRecommendations(data))
       .catch((err) => console.log(err))
   }, [])
 
