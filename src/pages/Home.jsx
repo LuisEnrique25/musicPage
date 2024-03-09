@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/shared/Header'
 import { axiosMusic } from '../utils/configAxios'
+import TrackList from '../components/shared/TrackList'
 
 
 
@@ -15,9 +16,9 @@ const Home = () => {
       }
     }
 
-    axiosMusic.get("/api/tracks/recommendations?seed_genres=rock,pop,anime", authToken
+    axiosMusic.get("/api/tracks/recommendations?seed_genres=rock,pop", authToken
       )
-      .then(({data}) =>setTracksRecommendations(data))
+      .then(({data}) =>setTracksRecommendations(data.tracks))
       .catch((err) => console.log(err))
   }, [])
 
@@ -45,6 +46,9 @@ const Home = () => {
               <option value="">10</option>
             </select>
           </form>
+
+          <TrackList tracks={tracksRecommendations} />
+
         </main>
       </section>
 
@@ -55,6 +59,3 @@ const Home = () => {
 export default Home
 
 
-/**
- bg-dark text-white h-screen overflow-auto font-urbanist  bg-[url(/imgs/bg-register-mobile.png)] bg-no-repeat bg-right-bottom sm:bg-[url(/imgs/bg-register-desktop.png)]
- */
