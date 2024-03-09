@@ -1,7 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from '../components/shared/Header'
+import { axiosMusic } from '../utils/configAxios'
+
+
 
 const Home = () => {
+  useEffect(() => {
+    const authToken = {
+      headers:{
+       Authorization: `JWT ${JSON.parse(localStorage.getItem("user")).token}`
+      }
+    }
+
+    axiosMusic.get("/api/tracks/recommendations?seed_genres=rock,pop,anime", authToken
+      )
+      .then(({data}) => console.log(data))
+      .catch((err) => console.log(err))
+  }, [])
+
+
   return (
     <section className='bg-dark text-white h-screen overflow-auto font-urbanist  bg-[url(/imgs/bg-register-mobile.png)] bg-no-repeat bg-right-bottom sm:bg-[url(/imgs/bg-register-desktop.png)] grid grid-rows-[auto_1fr] overflow-x-hidden'>
 
