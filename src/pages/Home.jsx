@@ -7,9 +7,31 @@ import TrackList from '../components/shared/TrackList'
 
 const Home = () => {
 
-  const [tracksRecommendations, setTracksRecommendations] = useState([])
+  const [tracksRecommendations, setTracksRecommendations] = useState([]);
+  const [searchTracks, setSearchTracks] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+                  //e.target."name del input".value   -> sirve tambn con el id del input
+    const query = e.target.query.value
+
+                  //e.target."name del select".value
+    const limit = e.target.limit.value
+
+    //para mostrar recomendadas cuando el usuario no escribe nada en el input query
+    if(query === "") return setSearchTracks([]);
+    
+    //para evitar repetir codigo de Autorizacion se configuro el archivo configAxios.js
+    axiosMusic.get(`/api/tracks?limit=${limit}&q=${query}`)
+      .then(({data}) => setSearchTracks(data.tracks.items))
+      .catch((err) => console.log(err))
+    
+
+
+  }
 
   useEffect(() => {
+    //forma 1 para requests protegidas
     const authToken = {
       headers:{
        Authorization: `JWT ${JSON.parse(localStorage.getItem("user")).token}`
@@ -30,24 +52,27 @@ const Home = () => {
       
       <section className='p-4'>
         <main className='bg-primary-dark p-7 px-4 rounded-2xl mt-11 max-w-[562px] mx-auto sm:px-16'>
-          <form action="" className='flex items-center gap-2 bg-white/20 p-3 rounded-xl max-w-[430px] mx-auto'>
+          <form onSubmit={handleSubmit} className='flex items-center gap-2 bg-white/20 p-3 rounded-xl max-w-[430px] mx-auto'>
             <button><i className="fa-solid fa-magnifying-glass"></i></button>
             <input 
               className="bg-transparent outline-none flex-1" 
               size={10}
               type="text" 
               placeholder='Buscar...'
-              id=""
+              name='query'
+              autoComplete='off'
             />
             <select 
-              className="bg-transparent outline-none" 
-              name=""
-              id="">
-              <option value="">10</option>
+              className="bg-transparent outline-none [&>option]:text-black" 
+              name="limit">
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
             </select>
           </form>
 
-          <TrackList tracks={tracksRecommendations} />
+          <TrackList tracks={searchTracks.length === 0 ? tracksRecommendations : searchTracks} />
 
         </main>
       </section>
